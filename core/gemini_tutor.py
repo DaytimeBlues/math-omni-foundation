@@ -47,7 +47,8 @@ class GeminiTutor:
     RATE_LIMIT_SECONDS = 3.0
     
     # Maximum words in response (safety clamp)
-    MAX_RESPONSE_WORDS = 15
+    # MUST match system instruction ("max 12 words")
+    MAX_RESPONSE_WORDS = 12
     
     def __init__(
         self, 

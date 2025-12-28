@@ -268,9 +268,41 @@ class Scratchpad(QWidget):
         - Thick lines (6px) for visibility and child satisfaction
         - Round caps/joins for natural, marker-like appearance
         - Dark purple-blue color for high contrast on white
+        - "Draw Here" hint when canvas is empty (intuitive onboarding)
+        - Red dot indicator when cloud session is active (privacy)
         """
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        
+        # --- EMPTY CANVAS HINT ---
+        # Shows faded "Draw Here" text when no strokes exist
+        # PEDAGOGICAL: Replaces need for complex onboarding overlay
+        if not self.strokes and not self.current_stroke:
+            hint_font = painter.font()
+            hint_font.setPointSize(48)
+            hint_font.setBold(True)
+            painter.setFont(hint_font)
+            painter.setPen(QColor(200, 200, 200))  # Light gray
+            painter.drawText(
+                self.rect(),
+                Qt.AlignmentFlag.AlignCenter,
+                "✏️ Draw Here"
+            )
+        
+        # --- RECORDING INDICATOR (Red Dot) ---
+        # PRIVACY: Shows when cloud session is active
+        # Required for child safety and parental awareness
+        if self._barrel_button_down:
+            painter.setBrush(QColor(231, 76, 60))  # Red
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.drawEllipse(self.width() - 30, 10, 20, 20)
+            # "REC" label
+            painter.setPen(QColor(231, 76, 60))
+            rec_font = painter.font()
+            rec_font.setPointSize(10)
+            rec_font.setBold(True)
+            painter.setFont(rec_font)
+            painter.drawText(self.width() - 60, 25, "REC")
         
         # Create pen for drawing strokes
         pen = QPen(QColor(COLORS['stroke']))
